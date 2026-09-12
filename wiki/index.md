@@ -3,4 +3,12 @@
 Knowledge base for this project. Entry point: follow a hub page to reach everything
 else.
 
-_No entries yet._
+## Explored sources
+
+- [nixpkgs-internals](nixpkgs-internals.md) — **seeded, partial.** Hub for
+  build/`lib` mechanics relevant to packaging work in this repo: `stdenv`,
+  dependency propagation, `callPackage`/`override`, fixed points and
+  overlays, deprecation policy, and the merge-to-channel release pipeline.
+  Adapted from another project's wiki (which only explored `lib/`, not
+  `pkgs/`) — see the hub page's "Known gaps" section for what's still
+  missing.
