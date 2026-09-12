@@ -41,6 +41,16 @@ to cross the rebuild threshold has to be retargeted by hand — this is the
 ordinary reason a green, unremarked-upon automated PR sits for weeks: it's
 waiting on someone to notice and retarget it, not on CI.
 
+The rebuild count itself isn't a human estimate: the `@r-ryantm` bot
+computes it by evaluating `pkgs/top-level/release.nix`/`nixos/release.nix`
+for `x86_64-linux` before and after its rewrite and diffing the out-paths —
+the same mechanism OfBorg uses to derive rebuild labels, but as an exact
+count and attrpath list rather than a label. It uses exactly the 500-rebuild
+line to choose `master` vs. `staging`, and separately routes to
+`staging-nixos` when NixOS VM tests are in the rebuild set. See
+[[r-ryantm-bot]] for the mechanism and its limits (only one architecture is
+evaluated, as an explicit accuracy/cost tradeoff).
+
 ## 2. The staging cycle
 
 Only relevant if the change went to `staging`. Most of the merge schedule
@@ -124,3 +134,6 @@ jobset. Only currently-supported releases are eligible.
 - [[nixpkgs-deprecation-policy]] — `oldestSupportedRelease` is defined
   relative to which releases are currently supported, the same set this
   pipeline's backport rules reference.
+- [[r-ryantm-bot]] — the automated update bot that feeds this pipeline;
+  its discovery latency (via Repology) is itself coupled to how often the
+  unstable channel moves.

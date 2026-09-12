@@ -2,7 +2,9 @@
 summary: >-
   Hub for how nixpkgs itself works underneath a `package.nix`: `stdenv`,
   dependency propagation, `callPackage`/`override`, the fixed-point/overlay
-  mechanism, deprecation policy, and the merge-to-channel release pipeline.
+  mechanism, deprecation policy, the merge-to-channel release pipeline, and
+  automated updates (the fakeHash bootstrap, the @r-ryantm bot,
+  `nix-update`/`nix-update-script`, and forge auto-detection).
 sources: []
 tags:
   - nixpkgs
@@ -38,6 +40,28 @@ particular PR).
 - [[nixpkgs-release-pipeline]] — merge → staging → Hydra → channel bump →
   consumer; why a green PR can sit unbumped for days.
 
+## Automated updates
+
+- [[hash-update-mechanics]] — the `fakeHash` bootstrap: how a fixed-output
+  derivation's real hash is learned by deliberately building with a wrong
+  one, and why vendored hashes (`cargoHash`, `vendorHash`, `npmDepsHash`)
+  need the trick run a second time. Covers two distinct implementations
+  (nixpkgs-update's file-rewrite, nix-update's throwaway-expression
+  override).
+- [[r-ryantm-bot]] — how the `@r-ryantm` bot decides what to update, filters
+  out likely false-positive PRs, and uses its fork's branch namespace as its
+  only state between runs. Explored from the [[nixpkgs-update]] tool that
+  implements it.
+- [[nix-update-script]] — how `passthru.updateScript = nix-update-script
+  { }` actually works: the wrapper passes no arguments, and the attrpath
+  arrives via environment variables set by the caller. Explored from
+  [[nix-update]], the CLI it wraps.
+- [[forge-detection-from-src-url]] — how [[nix-update]] decides whether to
+  query GitHub, GitLab, or a Gitea/Forgejo host like Codeberg for a
+  package's latest version, given that the fetcher function used
+  (`fetchFromGitHub` vs `fetchFromCodeberg`) is already erased by
+  evaluation time.
+
 ## Known gaps
 
 Not yet covered here (seeded from another project's wiki, which itself only
@@ -47,7 +71,10 @@ explored `lib/`, not `pkgs/`):
   style, `meta.maintainers`, common fetcher functions.
 - Pre-merge CI: `nixpkgs-vet`, the `by-name` structural checks, `nixfmt`
   formatting checks, ofborg/GitHub Actions eval checks.
-- Hash-update mechanics in practice: recomputing `hash`/`cargoHash`/
-  `npmDepsHash`, the `fakeHash` bootstrap workflow end to end.
-- The `@r-ryantm` update bot's behavior in detail (queueing, retry cadence,
-  what blocks it from picking up a new version).
+- `passthru.tests` as a general nixpkgs mechanism beyond how
+  [[r-ryantm-bot]] and [[nix-update]] each use it as a build/check gate —
+  no page yet on how a package defines one or how it's discovered outside
+  those two consumers.
+- The bot's actual runtime infrastructure — trigger cadence, queue, and the
+  "6h timeout" referenced in some of its skiplist reasons — lives outside
+  the `nixpkgs-update` codebase and hasn't been explored.
