@@ -1,0 +1,9 @@
+[[repos]]
+repo = "local"
+
+[[repos.hooks]]
+id = "reflow"
+name = "reflow markdown"
+entry = "reflow"
+language = "system"
+types = ["markdown"]
