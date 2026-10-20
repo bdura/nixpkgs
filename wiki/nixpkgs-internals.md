@@ -25,6 +25,12 @@ particular PR).
   setup hooks and env hooks, and how the `nativeBuildInputs`/`buildInputs`/
   `depsBuild*` split supersedes the older "buildInputs for everything" model.
 
+## Platform support
+
+- [[darwin-binary-repackaging]] — supporting Darwin by repackaging the
+  upstream `.app` in a `darwin.nix` while Linux keeps building from source;
+  `undmg` vs `_7zz` for APFS DMGs; `sourceProvenance`.
+
 ## The `lib` layer
 
 - [[callpackage-and-override]] — how `callPackage` auto-wires a package

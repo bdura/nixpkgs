@@ -15,3 +15,9 @@ else.
   Adapted from another project's wiki (which only explored `lib/`, not
   `pkgs/`) — see the hub page's "Known gaps" section for what's still
   missing.
+
+## Packages
+
+- [orca-slicer](orca-slicer.md) — **investigated.** Why it is Linux-only
+  (inherited from `bambu-studio`, GTK-bound build) and the upstream universal
+  macOS DMG that could be repackaged.
