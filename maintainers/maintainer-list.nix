@@ -3562,6 +3562,12 @@
     githubId = 14111;
     name = "Brandon Dimcheff";
   };
+  bdura = {
+    email = "20342020+bdura@users.noreply.github.com";
+    github = "bdura";
+    githubId = 20342020;
+    name = "Basile Dura";
+  };
   beardhatcode = {
     name = "Robbert Gurdeep Singh";
     email = "nixpkgs@beardhatcode.be";
