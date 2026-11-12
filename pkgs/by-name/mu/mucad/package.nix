@@ -5,6 +5,12 @@
   rustPlatform,
   pkg-config,
   wayland,
+  vulkan-loader,
+  libxkbcommon,
+  libx11,
+  libxcursor,
+  libxi,
+  libxrandr,
   installShellFiles,
   versionCheckHook,
   nix-update-script,
@@ -49,6 +55,22 @@ rustPlatform.buildRustPackage (finalAttrs: {
       --bash <($out/bin/mucad completions bash) \
       --zsh <($out/bin/mucad completions zsh) \
       --fish <($out/bin/mucad completions fish)
+  '';
+
+  postFixup = lib.optionalString stdenv.hostPlatform.isLinux ''
+    patchelf $out/bin/mucad-viewer --add-rpath ${
+      lib.makeLibraryPath [
+        # wgpu-hal loads libvulkan through ash at runtime
+        vulkan-loader
+        # winit: xkbcommon-dl, x11-dl, wayland-sys with dlopen
+        libxkbcommon
+        libx11
+        libxcursor
+        libxi
+        libxrandr
+        wayland
+      ]
+    }
   '';
 
   nativeInstallCheckInputs = [ versionCheckHook ];
